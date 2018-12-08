@@ -1398,6 +1398,18 @@ class MethodCallAnalyzer extends \Psalm\Internal\Analyzer\Statements\Expression\
             }
         }
 
+        if (!$args && $lhs_var_id) {
+            if (MethodAnalyzer::isMethodResultMemoizable($codebase, $method_id)) {
+                $method_var_id = $lhs_var_id . '->' . $method_name_lc . '()';
+
+                if (isset($context->vars_in_scope[$method_var_id])) {
+                    $return_type_candidate = clone $context->vars_in_scope[$method_var_id];
+                } elseif ($return_type_candidate) {
+                    $context->vars_in_scope[$method_var_id] = $return_type_candidate;
+                }
+            }
+        }
+
         if ($return_type_candidate) {
             if ($all_intersection_return_type) {
                 $return_type_candidate = Type::intersectUnionTypes(

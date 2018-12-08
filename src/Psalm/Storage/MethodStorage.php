@@ -57,4 +57,5 @@ class MethodStorage extends FunctionLikeStorage
      * @var bool
      */
     public $external_mutation_free = false;
+
 }
